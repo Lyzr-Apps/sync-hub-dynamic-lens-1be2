@@ -1,0 +1,26 @@
+{
+  "agent_name": "Clipboard Assistant Agent",
+  "agent_id": "69a282af8e6d0e51fd5cd42b",
+  "description": "Assists users by summarizing shared text, describing uploaded files/images, formatting code snippets with syntax detection, and enabling natural language search through transfer history. Operates on session content only.",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "action_type": "string",
+    "title": "string",
+    "content": "string",
+    "detected_language": "string",
+    "tags": [
+      "string"
+    ]
+  },
+  "example_response": {
+    "action_type": "The type of action performed: summarize, describe, format_code, search, organize",
+    "title": "A short title for the response",
+    "content": "The main response content - summary, description, formatted code, or search results",
+    "detected_language": "For code formatting: the detected programming language. Empty string if not applicable",
+    "tags": [
+      "sample string"
+    ]
+  }
+}

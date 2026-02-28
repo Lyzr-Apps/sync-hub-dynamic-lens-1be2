@@ -1,0 +1,85 @@
+{
+  "workflow": {
+    "nodes": [
+      {
+        "id": "input_node",
+        "type": "Input",
+        "label": "User Input",
+        "nodeCategory": "input"
+      },
+      {
+        "id": "clipboard_assistant_agent",
+        "type": "Agent",
+        "label": "Clipboard Assistant Agent",
+        "nodeCategory": "agent"
+      },
+      {
+        "id": "output_node",
+        "type": "Output",
+        "label": "Output",
+        "nodeCategory": "end"
+      }
+    ],
+    "edges": [
+      {
+        "source": "input_node",
+        "target": "clipboard_assistant_agent"
+      },
+      {
+        "source": "clipboard_assistant_agent",
+        "target": "output_node"
+      }
+    ]
+  },
+  "agents": {
+    "clipboard_assistant_agent": {
+      "agent_id": "69a282af8e6d0e51fd5cd42b",
+      "name": "Clipboard Assistant Agent",
+      "description": "Assists users by summarizing shared text, describing uploaded files/images, formatting code snippets with syntax detection, and enabling natural language search through transfer history. Operates on session content only.",
+      "provider_id": "openai",
+      "model": "gpt-4.1",
+      "temperature": 0.3,
+      "top_p": 1,
+      "image_output_config": null,
+      "voice_config": null,
+      "file_output": false,
+      "response_format": {
+        "type": "json_schema",
+        "json_schema": {
+          "name": "AgentResponse",
+          "strict": true,
+          "schema": {
+            "type": "object",
+            "properties": {
+              "action_type": {
+                "type": "string",
+                "description": "The type of action performed: summarize, describe, format_code, search, organize"
+              },
+              "title": {
+                "type": "string",
+                "description": "A short title for the response"
+              },
+              "content": {
+                "type": "string",
+                "description": "The main response content - summary, description, formatted code, or search results"
+              },
+              "detected_language": {
+                "type": "string",
+                "description": "For code formatting: the detected programming language. Empty string if not applicable"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Suggested tags or categories for the content"
+              }
+            },
+            "required": ["action_type", "title", "content", "detected_language", "tags"],
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  }
+}

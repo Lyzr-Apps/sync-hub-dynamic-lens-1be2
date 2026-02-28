@@ -1,0 +1,9 @@
+{
+  "agents": {
+    "clipboard_assistant_agent": {
+      "agent_id": "69a282af8e6d0e51fd5cd42b",
+      "name": "Clipboard Assistant Agent",
+      "type": "single"
+    }
+  }
+}

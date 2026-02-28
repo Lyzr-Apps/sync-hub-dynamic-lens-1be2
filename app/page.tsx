@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { FiClipboard, FiActivity } from 'react-icons/fi'
+import { FiClipboard, FiActivity, FiCheck } from 'react-icons/fi'
 import { callAIAgent } from '@/lib/aiAgent'
 
 import HomeSection from './sections/HomeSection'
@@ -276,6 +276,7 @@ export default function Page() {
   const [searchResult, setSearchResult] = useState('')
 
   const [activeAgentId, setActiveAgentId] = useState<string | null>(null)
+  const [shareConfirm, setShareConfirm] = useState<string | null>(null)
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -384,6 +385,23 @@ export default function Page() {
     setSmartOpen(false)
   }, [session, items, recentSessions])
 
+  const showShareConfirm = useCallback((label: string) => {
+    setShareConfirm(label)
+    setTimeout(() => setShareConfirm(null), 2000)
+  }, [])
+
+  const simulateRemoteEcho = useCallback((type: TransferItemType, preview: string) => {
+    setTimeout(() => {
+      setItems(prev => [{
+        id: `r-${Date.now()}`,
+        type: 'text',
+        content: `Received ${type}: ${preview.substring(0, 60)}${preview.length > 60 ? '...' : ''}`,
+        timestamp: new Date(),
+        sender: 'remote',
+      }, ...prev])
+    }, 1200 + Math.random() * 800)
+  }, [])
+
   const shareText = useCallback((text: string) => {
     const newItem: TransferItem = {
       id: `l-${Date.now()}`,
@@ -393,7 +411,9 @@ export default function Page() {
       sender: 'local',
     }
     setItems(prev => [newItem, ...prev])
-  }, [])
+    showShareConfirm('Text shared')
+    simulateRemoteEcho('text', text)
+  }, [showShareConfirm, simulateRemoteEcho])
 
   const shareCode = useCallback((code: string, language: string) => {
     const newItem: TransferItem = {
@@ -405,7 +425,9 @@ export default function Page() {
       sender: 'local',
     }
     setItems(prev => [newItem, ...prev])
-  }, [])
+    showShareConfirm('Code shared')
+    simulateRemoteEcho('code', `${language} snippet`)
+  }, [showShareConfirm, simulateRemoteEcho])
 
   const shareFile = useCallback((file: File) => {
     const newItem: TransferItem = {
@@ -418,7 +440,9 @@ export default function Page() {
       sender: 'local',
     }
     setItems(prev => [newItem, ...prev])
-  }, [])
+    showShareConfirm('File shared')
+    simulateRemoteEcho('file', file.name)
+  }, [showShareConfirm, simulateRemoteEcho])
 
   const handleSmartAction = useCallback((item: TransferItem) => {
     setSmartItem(item)
@@ -613,6 +637,16 @@ export default function Page() {
               searchResult={searchResult}
               onItemClick={handleSmartAction}
             />
+          )}
+
+          {shareConfirm && (
+            <div
+              className="fixed top-16 left-1/2 z-50 -translate-x-1/2 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-green-500 text-white text-sm font-medium shadow-lg shadow-green-500/25"
+              style={{ animation: 'slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both' }}
+            >
+              <FiCheck className="w-4 h-4" />
+              {shareConfirm}
+            </div>
           )}
 
           <div className="fixed bottom-4 left-4 z-20" style={{ animation: 'fadeIn 0.5s ease-out 0.5s both' }}>

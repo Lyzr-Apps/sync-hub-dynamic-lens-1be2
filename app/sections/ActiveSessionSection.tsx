@@ -5,7 +5,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import {
@@ -247,8 +246,8 @@ export default function ActiveSessionSection({
         </Button>
       </div>
 
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        <div className="w-full lg:w-[420px] lg:border-r border-border/50 p-4 md:p-6 overflow-y-auto">
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
+        <div className="w-full lg:w-[420px] lg:border-r border-border/50 p-4 md:p-6 overflow-y-auto lg:max-h-full max-h-[45vh] flex-shrink-0">
           <Tabs defaultValue="text" className="w-full">
             <TabsList className="w-full bg-muted/40 rounded-xl mb-4">
               <TabsTrigger value="text" className="flex-1 rounded-lg text-sm data-[state=active]:bg-card data-[state=active]:shadow-sm transition-all duration-300">
@@ -367,8 +366,8 @@ export default function ActiveSessionSection({
           </Tabs>
         </div>
 
-        <div className="flex-1 flex flex-col min-h-0 bg-background/40">
-          <div className="px-4 md:px-6 py-3 border-b border-border/30">
+        <div className="flex-1 flex flex-col min-h-0 bg-background/40 overflow-hidden">
+          <div className="px-4 md:px-6 py-3 border-b border-border/30 flex-shrink-0">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <FiWifi className="w-4 h-4 text-primary" />
@@ -378,7 +377,7 @@ export default function ActiveSessionSection({
             </div>
           </div>
 
-          <ScrollArea className="flex-1 px-4 md:px-6 py-3">
+          <div className="flex-1 overflow-y-auto px-4 md:px-6 py-3">
             {safeItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-center" style={{ animation: 'fadeIn 0.5s ease-out both' }}>
                 <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center mb-3">
@@ -495,7 +494,7 @@ export default function ActiveSessionSection({
                 })}
               </div>
             )}
-          </ScrollArea>
+          </div>
         </div>
       </div>
     </div>

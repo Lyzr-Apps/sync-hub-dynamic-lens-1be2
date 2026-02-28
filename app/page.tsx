@@ -577,8 +577,8 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="relative z-10">
-            {view === 'home' ? (
+          {view === 'home' ? (
+            <div className="relative z-10">
               <HomeSection
                 joinCode={joinCode}
                 setJoinCode={setJoinCode}
@@ -588,22 +588,22 @@ export default function Page() {
                 onClearHistory={clearHistory}
                 visible={view === 'home'}
               />
-            ) : session ? (
-              <div className="h-[calc(100vh-49px)] flex flex-col">
-                <ActiveSessionSection
-                  session={session}
-                  items={items}
-                  onShareText={shareText}
-                  onShareCode={shareCode}
-                  onShareFile={shareFile}
-                  onDisconnect={disconnect}
-                  onSmartAction={handleSmartAction}
-                  onExpandItem={() => {}}
-                  elapsedTime={elapsedTime}
-                />
-              </div>
-            ) : null}
-          </div>
+            </div>
+          ) : session ? (
+            <div className="relative z-10 h-[calc(100vh-49px)] flex flex-col">
+              <ActiveSessionSection
+                session={session}
+                items={items}
+                onShareText={shareText}
+                onShareCode={shareCode}
+                onShareFile={shareFile}
+                onDisconnect={disconnect}
+                onSmartAction={handleSmartAction}
+                onExpandItem={() => {}}
+                elapsedTime={elapsedTime}
+              />
+            </div>
+          ) : null}
 
           {showQR && qrCode && (
             <QRModal

@@ -246,8 +246,8 @@ export default function ActiveSessionSection({
         </Button>
       </div>
 
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden min-h-0">
-        <div className="w-full lg:w-[420px] lg:border-r border-border/50 p-4 md:p-6 overflow-y-auto lg:max-h-full max-h-[45vh] flex-shrink-0">
+      <div className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden">
+        <div className="w-full lg:w-[420px] lg:border-r border-border/50 p-4 md:p-6 overflow-y-auto max-h-[40vh] lg:max-h-none flex-shrink-0">
           <Tabs defaultValue="text" className="w-full">
             <TabsList className="w-full bg-muted/40 rounded-xl mb-4">
               <TabsTrigger value="text" className="flex-1 rounded-lg text-sm data-[state=active]:bg-card data-[state=active]:shadow-sm transition-all duration-300">
@@ -366,7 +366,7 @@ export default function ActiveSessionSection({
           </Tabs>
         </div>
 
-        <div className="flex-1 flex flex-col min-h-0 bg-background/40 overflow-hidden">
+        <div className="flex-1 flex flex-col min-h-[200px] bg-background/40 overflow-hidden">
           <div className="px-4 md:px-6 py-3 border-b border-border/30 flex-shrink-0">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">

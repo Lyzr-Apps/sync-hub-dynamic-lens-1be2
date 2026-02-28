@@ -115,6 +115,67 @@ function generateSessionCode(): string {
   return code
 }
 
+const KEYFRAMES_CSS = `
+@keyframes float3d {
+  0%, 100% { transform: rotateX(10deg) rotateY(-15deg) rotateZ(2deg) translateY(0); }
+  50% { transform: rotateX(5deg) rotateY(-10deg) rotateZ(-1deg) translateY(-15px); }
+}
+@keyframes floatOrb {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+  50% { transform: translateY(-20px) scale(1.1); opacity: 0.9; }
+}
+@keyframes slideInRight {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideFromRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes pulseRing {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+@keyframes connectLine {
+  0% { stroke-dashoffset: 20; }
+  100% { stroke-dashoffset: 0; }
+}
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
+}
+@keyframes spinCube {
+  0% { transform: rotateX(0deg) rotateY(0deg); }
+  100% { transform: rotateX(360deg) rotateY(360deg); }
+}
+@keyframes floatBg1 {
+  0%, 100% { transform: rotateX(45deg) rotateZ(45deg) translateY(0); }
+  50% { transform: rotateX(50deg) rotateZ(40deg) translateY(-12px); }
+}
+@keyframes floatBg2 {
+  0%, 100% { transform: rotateY(30deg) rotateX(20deg) translateY(0); }
+  50% { transform: rotateY(25deg) rotateX(25deg) translateY(-18px); }
+}
+`
+
 class ErrorBoundary extends React.Component<
   { children: React.ReactNode },
   { hasError: boolean; error: string }
@@ -145,6 +206,46 @@ class ErrorBoundary extends React.Component<
     }
     return this.props.children
   }
+}
+
+function FloatingBackground() {
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      <div
+        className="absolute top-20 left-10 w-20 h-20 border border-primary/[0.08] rounded-xl"
+        style={{ animation: 'floatBg1 8s ease-in-out infinite' }}
+      />
+      <div
+        className="absolute top-40 right-20 w-16 h-16 border border-accent/[0.08] rounded-full"
+        style={{ animation: 'floatOrb 10s ease-in-out infinite' }}
+      />
+      <div
+        className="absolute bottom-32 left-[25%] w-24 h-24 border border-primary/[0.05] rounded-2xl"
+        style={{ animation: 'floatBg2 12s ease-in-out infinite' }}
+      />
+      <div className="absolute bottom-20 right-[33%]" style={{ perspective: '200px' }}>
+        <div
+          className="w-14 h-14 border border-accent/[0.06]"
+          style={{ animation: 'spinCube 20s linear infinite', transformStyle: 'preserve-3d' }}
+        />
+      </div>
+      <div
+        className="absolute top-[60%] left-[15%] w-10 h-10 border border-primary/[0.06] rounded-lg"
+        style={{ transform: 'rotateZ(30deg)', animation: 'floatOrb 9s ease-in-out infinite 2s' }}
+      />
+      <div
+        className="absolute top-[30%] right-[10%] w-6 h-6 rounded-full"
+        style={{
+          background: 'radial-gradient(circle, hsl(193,43%,67%,0.08) 0%, transparent 70%)',
+          animation: 'floatOrb 7s ease-in-out infinite 1s',
+        }}
+      />
+      <div
+        className="absolute top-[15%] left-[50%] w-8 h-8 border border-accent/[0.05] rounded-full"
+        style={{ animation: 'floatOrb 11s ease-in-out infinite 3s' }}
+      />
+    </div>
+  )
 }
 
 export default function Page() {
@@ -405,16 +506,31 @@ export default function Page() {
         style={THEME_VARS}
         className="min-h-screen bg-background text-foreground font-sans"
       >
+        <style dangerouslySetInnerHTML={{ __html: KEYFRAMES_CSS }} />
         <div
-          className="min-h-screen"
+          className="min-h-screen relative"
           style={{
             background: 'linear-gradient(135deg, hsl(220,30%,97%) 0%, hsl(210,25%,95%) 35%, hsl(200,20%,96%) 70%, hsl(230,25%,97%) 100%)',
           }}
         >
-          <div className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border/30 bg-card/50 backdrop-blur-[16px]">
+          <FloatingBackground />
+
+          <div className="relative z-10 flex items-center justify-between px-4 md:px-6 py-3 border-b border-border/30 bg-card/50 backdrop-blur-[16px]">
             <div className="flex items-center gap-2">
-              <FiClipboard className="w-5 h-5 text-primary" />
-              <span className="font-semibold text-foreground tracking-tight" style={{ letterSpacing: '-0.01em' }}>ClipSync</span>
+              <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
+                <FiClipboard className="w-4 h-4 text-primary" />
+              </div>
+              <span
+                className="font-semibold text-lg bg-clip-text text-transparent"
+                style={{
+                  backgroundImage: 'linear-gradient(135deg, hsl(213,32%,52%), hsl(193,43%,67%), hsl(213,32%,52%))',
+                  backgroundSize: '200% auto',
+                  animation: 'shimmer 3s linear infinite',
+                  letterSpacing: '-0.01em',
+                }}
+              >
+                ClipSync
+              </span>
             </div>
             <div className="flex items-center gap-3">
               <Label htmlFor="sample-toggle" className="text-xs text-muted-foreground cursor-pointer">Sample Data</Label>
@@ -431,30 +547,33 @@ export default function Page() {
             </div>
           </div>
 
-          {view === 'home' ? (
-            <HomeSection
-              joinCode={joinCode}
-              setJoinCode={setJoinCode}
-              onCreateSession={startSession}
-              onJoinSession={joinSession}
-              recentSessions={recentSessions}
-              onClearHistory={clearHistory}
-            />
-          ) : session ? (
-            <div className="h-[calc(100vh-49px)] flex flex-col">
-              <ActiveSessionSection
-                session={session}
-                items={items}
-                onShareText={shareText}
-                onShareCode={shareCode}
-                onShareFile={shareFile}
-                onDisconnect={disconnect}
-                onSmartAction={handleSmartAction}
-                onExpandItem={() => {}}
-                elapsedTime={elapsedTime}
+          <div className="relative z-10">
+            {view === 'home' ? (
+              <HomeSection
+                joinCode={joinCode}
+                setJoinCode={setJoinCode}
+                onCreateSession={startSession}
+                onJoinSession={joinSession}
+                recentSessions={recentSessions}
+                onClearHistory={clearHistory}
+                visible={view === 'home'}
               />
-            </div>
-          ) : null}
+            ) : session ? (
+              <div className="h-[calc(100vh-49px)] flex flex-col">
+                <ActiveSessionSection
+                  session={session}
+                  items={items}
+                  onShareText={shareText}
+                  onShareCode={shareCode}
+                  onShareFile={shareFile}
+                  onDisconnect={disconnect}
+                  onSmartAction={handleSmartAction}
+                  onExpandItem={() => {}}
+                  elapsedTime={elapsedTime}
+                />
+              </div>
+            ) : null}
+          </div>
 
           {showQR && qrCode && (
             <QRModal
@@ -490,7 +609,7 @@ export default function Page() {
             />
           )}
 
-          <div className="fixed bottom-4 left-4 z-20">
+          <div className="fixed bottom-4 left-4 z-20" style={{ animation: 'fadeIn 0.5s ease-out 0.5s both' }}>
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-card/90 backdrop-blur-[16px] border border-white/[0.18] shadow-lg text-xs">
               <FiActivity className="w-3.5 h-3.5 text-muted-foreground" />
               <span className="text-muted-foreground">Clipboard Assistant</span>

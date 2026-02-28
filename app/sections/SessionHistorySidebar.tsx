@@ -80,7 +80,8 @@ export default function SessionHistorySidebar({
     return (
       <button
         onClick={onToggle}
-        className="fixed top-4 right-4 z-30 w-10 h-10 rounded-xl bg-card/90 backdrop-blur-[16px] border border-white/[0.18] shadow-lg flex items-center justify-center hover:bg-card transition-colors"
+        className="fixed top-16 right-4 z-30 w-10 h-10 rounded-xl bg-card/90 backdrop-blur-[16px] border border-white/[0.18] shadow-lg flex items-center justify-center hover:bg-card hover:scale-110 active:scale-95 transition-all duration-300"
+        style={{ animation: 'fadeIn 0.3s ease-out both' }}
       >
         <FiSidebar className="w-5 h-5 text-foreground" />
       </button>
@@ -88,87 +89,102 @@ export default function SessionHistorySidebar({
   }
 
   return (
-    <div className="fixed top-0 right-0 z-30 h-full w-80 bg-card/95 backdrop-blur-[16px] border-l border-white/[0.18] shadow-2xl flex flex-col">
-      <div className="flex items-center justify-between px-4 py-4 border-b border-border/50">
-        <h3 className="font-semibold text-foreground text-sm">Transfer History</h3>
-        <button
-          onClick={onToggle}
-          className="w-8 h-8 rounded-full bg-muted/60 hover:bg-muted flex items-center justify-center transition-colors"
-        >
-          <FiX className="w-4 h-4" />
-        </button>
-      </div>
-
-      <div className="px-4 py-3 space-y-3 border-b border-border/30">
-        <div className="flex gap-1.5">
-          <Input
-            placeholder="Search items..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') handleSearch() }}
-            className="flex-1 h-8 text-sm bg-background/70 border-border"
-          />
-          <Button size="sm" variant="ghost" onClick={handleSearch} disabled={searchLoading} className="h-8 w-8 p-0">
-            {searchLoading ? <FiLoader className="w-4 h-4 animate-spin" /> : <FiSearch className="w-4 h-4" />}
-          </Button>
+    <>
+      <div
+        className="fixed inset-0 z-20 bg-black/10 backdrop-blur-[2px] lg:hidden"
+        onClick={onToggle}
+        style={{ animation: 'fadeIn 0.2s ease-out both' }}
+      />
+      <div
+        className="fixed top-0 right-0 z-30 h-full w-80 bg-card/95 backdrop-blur-[20px] border-l border-white/[0.18] shadow-2xl flex flex-col overflow-hidden"
+        style={{ animation: 'slideFromRight 0.35s cubic-bezier(0.16, 1, 0.3, 1) both' }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+        <div className="flex items-center justify-between px-4 py-4 border-b border-border/50 relative">
+          <h3 className="font-semibold text-foreground text-sm">Transfer History</h3>
+          <button
+            onClick={onToggle}
+            className="w-8 h-8 rounded-full bg-muted/60 hover:bg-muted flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
+          >
+            <FiX className="w-4 h-4" />
+          </button>
         </div>
 
-        <div className="flex gap-1 flex-wrap">
-          {(['all', 'text', 'code', 'file', 'image'] as FilterType[]).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`text-xs px-2.5 py-1 rounded-full transition-colors ${filter === f ? 'bg-primary text-primary-foreground' : 'bg-muted/60 text-muted-foreground hover:bg-muted'}`}
-            >
-              {f.charAt(0).toUpperCase() + f.slice(1)}
-            </button>
-          ))}
-        </div>
-      </div>
+        <div className="px-4 py-3 space-y-3 border-b border-border/30 relative">
+          <div className="flex gap-1.5">
+            <Input
+              placeholder="Search items..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleSearch() }}
+              className="flex-1 h-8 text-sm bg-background/70 border-border transition-all duration-300 focus:shadow-md focus:shadow-primary/10"
+            />
+            <Button size="sm" variant="ghost" onClick={handleSearch} disabled={searchLoading} className="h-8 w-8 p-0 hover:scale-110 active:scale-95 transition-all duration-300">
+              {searchLoading ? <FiLoader className="w-4 h-4 animate-spin" /> : <FiSearch className="w-4 h-4" />}
+            </Button>
+          </div>
 
-      {searchResult && (
-        <div className="px-4 py-3 bg-primary/5 border-b border-border/30">
-          <p className="text-xs font-medium text-primary mb-1">Search Result</p>
-          <p className="text-xs text-foreground whitespace-pre-wrap">{searchResult}</p>
-        </div>
-      )}
-
-      <ScrollArea className="flex-1">
-        <div className="px-4 py-3 space-y-2">
-          {filteredItems.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">No items yet</p>
-          ) : (
-            filteredItems.map((item) => (
+          <div className="flex gap-1 flex-wrap">
+            {(['all', 'text', 'code', 'file', 'image'] as FilterType[]).map((f) => (
               <button
-                key={item.id}
-                onClick={() => onItemClick(item)}
-                className="w-full text-left p-3 rounded-xl bg-background/60 border border-border/40 hover:bg-background/80 transition-colors group"
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`text-xs px-2.5 py-1 rounded-full transition-all duration-300 active:scale-95 ${filter === f ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20' : 'bg-muted/60 text-muted-foreground hover:bg-muted'}`}
               >
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-muted-foreground">{typeIcon(item.type)}</span>
-                  <Badge variant="outline" className="text-[10px] rounded-full border-border/60">
-                    {item.type}
-                  </Badge>
-                  {item.language && (
-                    <Badge variant="secondary" className="text-[10px] font-mono">
-                      {item.language}
-                    </Badge>
-                  )}
-                  <span className="text-[10px] text-muted-foreground ml-auto">
-                    {formatTime(item.timestamp instanceof Date ? item.timestamp : new Date(item.timestamp))}
-                  </span>
-                </div>
-                <p className="text-xs text-foreground/80 truncate">
-                  {item.type === 'file' ? (item.fileName ?? 'File') : (item.content?.substring(0, 80) ?? '')}
-                </p>
-                {item.sender === 'remote' && (
-                  <span className="text-[10px] text-primary mt-1 inline-block">From paired device</span>
-                )}
+                {f.charAt(0).toUpperCase() + f.slice(1)}
               </button>
-            ))
-          )}
+            ))}
+          </div>
         </div>
-      </ScrollArea>
-    </div>
+
+        {searchResult && (
+          <div
+            className="px-4 py-3 bg-primary/5 border-b border-border/30 relative"
+            style={{ animation: 'fadeIn 0.3s ease-out both' }}
+          >
+            <p className="text-xs font-medium text-primary mb-1">Search Result</p>
+            <p className="text-xs text-foreground whitespace-pre-wrap">{searchResult}</p>
+          </div>
+        )}
+
+        <ScrollArea className="flex-1 relative">
+          <div className="px-4 py-3 space-y-2">
+            {filteredItems.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8" style={{ animation: 'fadeIn 0.4s ease-out both' }}>No items yet</p>
+            ) : (
+              filteredItems.map((item, idx) => (
+                <button
+                  key={item.id}
+                  onClick={() => onItemClick(item)}
+                  className="w-full text-left p-3 rounded-xl bg-background/60 border border-border/40 hover:bg-background/80 hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 group"
+                  style={{ animation: `slideInRight 0.3s ease-out ${idx * 0.04}s both` }}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-muted-foreground group-hover:text-primary transition-colors duration-300">{typeIcon(item.type)}</span>
+                    <Badge variant="outline" className="text-[10px] rounded-full border-border/60">
+                      {item.type}
+                    </Badge>
+                    {item.language && (
+                      <Badge variant="secondary" className="text-[10px] font-mono">
+                        {item.language}
+                      </Badge>
+                    )}
+                    <span className="text-[10px] text-muted-foreground ml-auto">
+                      {formatTime(item.timestamp instanceof Date ? item.timestamp : new Date(item.timestamp))}
+                    </span>
+                  </div>
+                  <p className="text-xs text-foreground/80 truncate">
+                    {item.type === 'file' ? (item.fileName ?? 'File') : (item.content?.substring(0, 80) ?? '')}
+                  </p>
+                  {item.sender === 'remote' && (
+                    <span className="text-[10px] text-primary mt-1 inline-block">From paired device</span>
+                  )}
+                </button>
+              ))
+            )}
+          </div>
+        </ScrollArea>
+      </div>
+    </>
   )
 }

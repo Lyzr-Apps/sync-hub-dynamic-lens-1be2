@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { FiZap, FiX, FiLoader } from 'react-icons/fi'
+import { FiZap, FiX } from 'react-icons/fi'
 
 interface AgentResponse {
   action_type?: string
@@ -94,45 +94,58 @@ export default function SmartActionsPanel({
   const showTextActions = itemType === 'text' || itemType === 'file' || itemType === 'image'
 
   return (
-    <div className="fixed inset-0 z-40 flex items-end md:items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div className="w-full max-w-lg mx-4 mb-4 md:mb-0 bg-card/95 backdrop-blur-[16px] border border-white/[0.18] rounded-2xl shadow-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border/50">
+    <div
+      className="fixed inset-0 z-40 flex items-end md:items-center justify-center"
+      style={{ animation: 'fadeIn 0.3s ease-out both' }}
+    >
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="relative w-full max-w-lg mx-4 mb-4 md:mb-0 bg-card/95 backdrop-blur-[20px] border border-white/[0.18] rounded-2xl shadow-2xl overflow-hidden"
+        style={{ animation: 'slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both' }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-white/8 to-transparent pointer-events-none rounded-[inherit]" />
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border/50 relative">
           <div className="flex items-center gap-2">
-            <FiZap className="w-5 h-5 text-primary" />
+            <div
+              className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center"
+              style={{ animation: 'bounceIn 0.5s ease-out 0.2s both' }}
+            >
+              <FiZap className="w-4 h-4 text-primary" />
+            </div>
             <h3 className="font-semibold text-foreground">Smart Actions</h3>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-muted/60 hover:bg-muted flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full bg-muted/60 hover:bg-muted flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95"
           >
             <FiX className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="p-5 space-y-4">
+        <div className="p-5 space-y-4 relative">
           <div className="flex flex-wrap gap-2">
             {showTextActions && (
               <>
-                <Button size="sm" variant="outline" onClick={() => onAction('summarize')} disabled={loading} className="rounded-full border-border">
+                <Button size="sm" variant="outline" onClick={() => onAction('summarize')} disabled={loading} className="rounded-full border-border hover:bg-primary/10 hover:border-primary/30 hover:text-primary active:scale-[0.95] transition-all duration-300" style={{ animation: 'slideInRight 0.3s ease-out 0.1s both' }}>
                   Summarize
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => onAction('describe')} disabled={loading} className="rounded-full border-border">
+                <Button size="sm" variant="outline" onClick={() => onAction('describe')} disabled={loading} className="rounded-full border-border hover:bg-primary/10 hover:border-primary/30 hover:text-primary active:scale-[0.95] transition-all duration-300" style={{ animation: 'slideInRight 0.3s ease-out 0.18s both' }}>
                   Describe
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => onAction('organize')} disabled={loading} className="rounded-full border-border">
+                <Button size="sm" variant="outline" onClick={() => onAction('organize')} disabled={loading} className="rounded-full border-border hover:bg-primary/10 hover:border-primary/30 hover:text-primary active:scale-[0.95] transition-all duration-300" style={{ animation: 'slideInRight 0.3s ease-out 0.26s both' }}>
                   Organize
                 </Button>
               </>
             )}
             {showCodeActions && (
               <>
-                <Button size="sm" variant="outline" onClick={() => onAction('format_code')} disabled={loading} className="rounded-full border-border">
+                <Button size="sm" variant="outline" onClick={() => onAction('format_code')} disabled={loading} className="rounded-full border-border hover:bg-primary/10 hover:border-primary/30 hover:text-primary active:scale-[0.95] transition-all duration-300" style={{ animation: 'slideInRight 0.3s ease-out 0.1s both' }}>
                   Format Code
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => onAction('summarize')} disabled={loading} className="rounded-full border-border">
+                <Button size="sm" variant="outline" onClick={() => onAction('summarize')} disabled={loading} className="rounded-full border-border hover:bg-primary/10 hover:border-primary/30 hover:text-primary active:scale-[0.95] transition-all duration-300" style={{ animation: 'slideInRight 0.3s ease-out 0.18s both' }}>
                   Summarize
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => onAction('describe')} disabled={loading} className="rounded-full border-border">
+                <Button size="sm" variant="outline" onClick={() => onAction('describe')} disabled={loading} className="rounded-full border-border hover:bg-primary/10 hover:border-primary/30 hover:text-primary active:scale-[0.95] transition-all duration-300" style={{ animation: 'slideInRight 0.3s ease-out 0.26s both' }}>
                   Describe
                 </Button>
               </>
@@ -140,21 +153,30 @@ export default function SmartActionsPanel({
           </div>
 
           {loading && (
-            <div className="flex items-center justify-center py-8 gap-3">
-              <FiLoader className="w-5 h-5 animate-spin text-primary" />
-              <span className="text-sm text-muted-foreground">Processing with AI...</span>
+            <div className="flex items-center gap-2 py-8 justify-center" style={{ animation: 'fadeIn 0.3s ease-out both' }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-primary" style={{ animation: 'bounce 1.4s ease-in-out infinite' }} />
+              <div className="w-2.5 h-2.5 rounded-full bg-primary" style={{ animation: 'bounce 1.4s ease-in-out 0.2s infinite' }} />
+              <div className="w-2.5 h-2.5 rounded-full bg-primary" style={{ animation: 'bounce 1.4s ease-in-out 0.4s infinite' }} />
+              <span className="text-sm text-muted-foreground ml-2">Processing with AI...</span>
             </div>
           )}
 
           {error && (
-            <div className="bg-destructive/10 text-destructive text-sm rounded-xl px-4 py-3">
+            <div
+              className="bg-destructive/10 text-destructive text-sm rounded-xl px-4 py-3"
+              style={{ animation: 'slideInRight 0.3s ease-out both' }}
+            >
               {error}
             </div>
           )}
 
           {response && !loading && (
-            <Card className="border border-border/50 bg-background/60">
-              <CardHeader className="pb-2 pt-4 px-4">
+            <Card
+              className="relative overflow-hidden border border-border/50 bg-background/60"
+              style={{ animation: 'fadeIn 0.4s ease-out both' }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none rounded-[inherit]" />
+              <CardHeader className="pb-2 pt-4 px-4 relative">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${actionColor(response.action_type ?? '')}`}>
                     {actionLabel(response.action_type ?? '')}
@@ -169,7 +191,7 @@ export default function SmartActionsPanel({
                   {response.title ?? 'Result'}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="px-4 pb-4">
+              <CardContent className="px-4 pb-4 relative">
                 <ScrollArea className="max-h-64">
                   <div className="text-foreground">
                     {renderMarkdown(response.content ?? '')}
@@ -189,7 +211,7 @@ export default function SmartActionsPanel({
           )}
 
           {!response && !loading && !error && (
-            <p className="text-sm text-muted-foreground text-center py-4">
+            <p className="text-sm text-muted-foreground text-center py-4" style={{ animation: 'fadeIn 0.4s ease-out both' }}>
               Choose an action above to process this item with AI
             </p>
           )}

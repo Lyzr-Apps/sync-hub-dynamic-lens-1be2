@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { FiX, FiCopy } from 'react-icons/fi'
+import { FiX, FiCopy, FiCheck } from 'react-icons/fi'
 
 interface QRModalProps {
   sessionCode: string
@@ -85,25 +85,40 @@ export default function QRModal({ sessionCode, onClose }: QRModalProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="relative w-full max-w-sm mx-4 bg-card/95 backdrop-blur-[16px] border border-white/[0.18] rounded-2xl shadow-2xl p-8">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ animation: 'fadeIn 0.3s ease-out both' }}
+    >
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <div
+        className="relative w-full max-w-sm mx-4 bg-card/95 backdrop-blur-[20px] border border-white/[0.18] rounded-2xl shadow-2xl p-8 overflow-hidden"
+        style={{ animation: 'bounceIn 0.5s ease-out both' }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none rounded-[inherit]" />
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-muted/60 hover:bg-muted flex items-center justify-center transition-colors"
+          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-muted/60 hover:bg-muted flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 z-10"
         >
           <FiX className="w-4 h-4 text-foreground" />
         </button>
 
-        <h2 className="text-xl font-semibold text-center mb-6 text-foreground">Scan to Connect</h2>
+        <h2 className="text-xl font-semibold text-center mb-6 text-foreground relative">Scan to Connect</h2>
 
-        <div className="bg-white rounded-xl p-4 mb-6 shadow-inner">
+        <div className="bg-white rounded-xl p-4 mb-6 shadow-inner relative" style={{ animation: 'fadeIn 0.4s ease-out 0.2s both' }}>
           <QRGrid code={sessionCode} />
         </div>
 
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-4 relative">
           <div>
-            <p className="text-xs text-muted-foreground mb-1">Session Code</p>
-            <Badge variant="secondary" className="text-lg font-mono px-4 py-1.5 tracking-widest">
+            <p className="text-xs text-muted-foreground mb-1.5">Session Code</p>
+            <Badge
+              variant="secondary"
+              className="text-lg font-mono px-4 py-1.5 tracking-widest"
+              style={{ animation: 'fadeIn 0.4s ease-out 0.3s both' }}
+            >
               {sessionCode}
             </Badge>
           </div>
@@ -111,10 +126,13 @@ export default function QRModal({ sessionCode, onClose }: QRModalProps) {
           <Button
             variant="outline"
             onClick={handleCopy}
-            className="w-full border-border hover:bg-muted/50 transition-all duration-300"
+            className="w-full border-border hover:bg-muted/50 active:scale-[0.97] transition-all duration-300 hover:shadow-md"
           >
-            <FiCopy className="w-4 h-4 mr-2" />
-            {copied ? 'Copied!' : 'Copy Code'}
+            {copied ? (
+              <><FiCheck className="w-4 h-4 mr-2 text-green-600" />Copied!</>
+            ) : (
+              <><FiCopy className="w-4 h-4 mr-2" />Copy Code</>
+            )}
           </Button>
 
           <p className="text-xs text-muted-foreground">

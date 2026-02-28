@@ -101,18 +101,54 @@ function codeHighlight(code: string, language: string) {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
-
     highlighted = highlighted.replace(/(\/\/.*$)/gm, '<span style="color:hsl(220,12%,50%)">$1</span>')
     highlighted = highlighted.replace(/(#.*$)/gm, '<span style="color:hsl(220,12%,50%)">$1</span>')
     highlighted = highlighted.replace(/(&quot;[^&]*&quot;|'[^']*'|"[^"]*"|`[^`]*`)/g, '<span style="color:hsl(193,43%,47%)">$1</span>')
-
     kws.forEach(kw => {
       const regex = new RegExp(`\\b(${kw})\\b`, 'g')
       highlighted = highlighted.replace(regex, `<span style="color:hsl(213,32%,52%);font-weight:600">$1</span>`)
     })
-
     return `<span style="color:hsl(220,12%,50%);user-select:none;margin-right:12px;display:inline-block;width:24px;text-align:right">${li + 1}</span>${highlighted}`
   }).join('\n')
+}
+
+function ConnectedDevices3D() {
+  return (
+    <div className="flex items-center gap-3 justify-center py-1" style={{ perspective: '600px' }}>
+      <div style={{ animation: 'float3d 5s ease-in-out infinite' }}>
+        <div className="w-10 h-16 rounded-xl shadow-lg border-2 border-white/20" style={{ background: 'linear-gradient(135deg, hsl(213,32%,52%), hsl(193,43%,67%))' }}>
+          <div className="w-5 h-0.5 bg-white/30 rounded-full mx-auto mt-1" />
+          <div className="p-1.5 mt-1 space-y-1">
+            <div className="h-0.5 bg-white/20 rounded-full w-full" />
+            <div className="h-0.5 bg-white/15 rounded-full w-3/4" />
+            <div className="h-0.5 bg-white/20 rounded-full w-5/6" />
+          </div>
+        </div>
+      </div>
+      <svg width="64" height="16" className="flex-shrink-0">
+        <line x1="0" y1="8" x2="64" y2="8" stroke="hsl(213,32%,52%)" strokeWidth="1.5" strokeDasharray="5,3" style={{ animation: 'connectLine 1s linear infinite' }} />
+        <circle r="2.5" fill="hsl(193,43%,67%)">
+          <animateMotion dur="2s" repeatCount="indefinite" path="M0,8 L64,8" />
+        </circle>
+        <circle r="2.5" fill="hsl(193,43%,67%)">
+          <animateMotion dur="2s" repeatCount="indefinite" path="M0,8 L64,8" begin="0.7s" />
+        </circle>
+        <circle r="2.5" fill="hsl(213,32%,62%)">
+          <animateMotion dur="2s" repeatCount="indefinite" path="M0,8 L64,8" begin="1.3s" />
+        </circle>
+      </svg>
+      <div style={{ animation: 'float3d 5s ease-in-out infinite 0.5s' }}>
+        <div className="w-10 h-16 rounded-xl shadow-lg border-2 border-white/20" style={{ background: 'linear-gradient(135deg, hsl(193,43%,67%), hsl(213,32%,52%))' }}>
+          <div className="w-5 h-0.5 bg-white/30 rounded-full mx-auto mt-1" />
+          <div className="p-1.5 mt-1 space-y-1">
+            <div className="h-0.5 bg-white/20 rounded-full w-5/6" />
+            <div className="h-0.5 bg-white/15 rounded-full w-full" />
+            <div className="h-0.5 bg-white/20 rounded-full w-2/3" />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default function ActiveSessionSection({
@@ -185,16 +221,21 @@ export default function ActiveSessionSection({
   const safeItems = Array.isArray(items) ? items : []
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between px-4 md:px-6 py-3 bg-card/80 backdrop-blur-[16px] border-b border-border/50">
-        <div className="flex items-center gap-3 flex-wrap">
+    <div className="flex flex-col h-full" style={{ animation: 'fadeIn 0.4s ease-out both' }}>
+      <div className="flex items-center justify-between px-4 md:px-6 py-3 bg-card/80 backdrop-blur-[16px] border-b border-border/50 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent pointer-events-none" />
+        <div className="flex items-center gap-3 flex-wrap relative">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+            <span className="relative flex w-2.5 h-2.5">
+              <span className="absolute inset-0 rounded-full bg-green-500 opacity-50" style={{ animation: 'pulseRing 2s ease-out infinite' }} />
+              <span className="relative w-2.5 h-2.5 rounded-full bg-green-500" />
+            </span>
             <span className="text-sm font-medium text-foreground">Connected</span>
           </div>
           <Badge variant="secondary" className="font-mono text-xs tracking-wider">
             {session?.code ?? ''}
           </Badge>
+          <ConnectedDevices3D />
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <FiClock className="w-3 h-3" />
             <span>{elapsedTime}</span>
@@ -204,7 +245,7 @@ export default function ActiveSessionSection({
           variant="outline"
           size="sm"
           onClick={onDisconnect}
-          className="text-destructive border-destructive/30 hover:bg-destructive/10 transition-all duration-300"
+          className="text-destructive border-destructive/30 hover:bg-destructive/10 active:scale-[0.95] transition-all duration-300 relative"
         >
           <FiX className="w-3.5 h-3.5 mr-1" />
           Disconnect
@@ -215,13 +256,13 @@ export default function ActiveSessionSection({
         <div className="w-full lg:w-[420px] lg:border-r border-border/50 p-4 md:p-6 overflow-y-auto">
           <Tabs defaultValue="text" className="w-full">
             <TabsList className="w-full bg-muted/40 rounded-xl mb-4">
-              <TabsTrigger value="text" className="flex-1 rounded-lg text-sm data-[state=active]:bg-card data-[state=active]:shadow-sm">
+              <TabsTrigger value="text" className="flex-1 rounded-lg text-sm data-[state=active]:bg-card data-[state=active]:shadow-sm transition-all duration-300">
                 <FiFileText className="w-3.5 h-3.5 mr-1.5" />Text
               </TabsTrigger>
-              <TabsTrigger value="code" className="flex-1 rounded-lg text-sm data-[state=active]:bg-card data-[state=active]:shadow-sm">
+              <TabsTrigger value="code" className="flex-1 rounded-lg text-sm data-[state=active]:bg-card data-[state=active]:shadow-sm transition-all duration-300">
                 <FiCode className="w-3.5 h-3.5 mr-1.5" />Code
               </TabsTrigger>
-              <TabsTrigger value="file" className="flex-1 rounded-lg text-sm data-[state=active]:bg-card data-[state=active]:shadow-sm">
+              <TabsTrigger value="file" className="flex-1 rounded-lg text-sm data-[state=active]:bg-card data-[state=active]:shadow-sm transition-all duration-300">
                 <FiFile className="w-3.5 h-3.5 mr-1.5" />File
               </TabsTrigger>
             </TabsList>
@@ -231,13 +272,13 @@ export default function ActiveSessionSection({
                 placeholder="Paste or type text to share..."
                 value={textInput}
                 onChange={(e) => setTextInput(e.target.value)}
-                className="min-h-[160px] bg-background/70 border-border resize-none text-sm"
+                className="min-h-[160px] bg-background/70 border-border resize-none text-sm transition-all duration-300 focus:shadow-md focus:shadow-primary/10"
                 style={{ lineHeight: '1.55' }}
               />
               <Button
                 onClick={handleShareText}
                 disabled={!textInput.trim()}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.97] transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-primary/20"
               >
                 <FiSend className="w-4 h-4 mr-2" />
                 Share Text
@@ -246,7 +287,7 @@ export default function ActiveSessionSection({
 
             <TabsContent value="code" className="space-y-3 mt-0">
               <Select value={selectedLang} onValueChange={setSelectedLang}>
-                <SelectTrigger className="bg-background/70 border-border">
+                <SelectTrigger className="bg-background/70 border-border transition-all duration-300 focus:shadow-md focus:shadow-primary/10">
                   <SelectValue placeholder="Language" />
                 </SelectTrigger>
                 <SelectContent>
@@ -259,13 +300,13 @@ export default function ActiveSessionSection({
                 placeholder="Paste code here..."
                 value={codeInput}
                 onChange={(e) => setCodeInput(e.target.value)}
-                className="min-h-[160px] bg-background/70 border-border font-mono text-sm resize-none"
+                className="min-h-[160px] bg-background/70 border-border font-mono text-sm resize-none transition-all duration-300 focus:shadow-md focus:shadow-primary/10"
                 style={{ lineHeight: '1.55' }}
               />
               <Button
                 onClick={handleShareCode}
                 disabled={!codeInput.trim()}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.97] transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-primary/20"
               >
                 <FiSend className="w-4 h-4 mr-2" />
                 Share Code
@@ -277,9 +318,11 @@ export default function ActiveSessionSection({
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
-                className="min-h-[160px] border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-all duration-300"
+                className="min-h-[160px] border-2 border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-all duration-300 group"
               >
-                <FiUpload className="w-8 h-8 text-muted-foreground" />
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                  <FiUpload className="w-6 h-6 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
+                </div>
                 <div className="text-center">
                   <p className="text-sm text-foreground font-medium">
                     {selectedFile ? selectedFile.name : 'Drop a file or click to browse'}
@@ -305,17 +348,22 @@ export default function ActiveSessionSection({
                 />
               </div>
               {uploading && (
-                <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                <div className="w-full bg-muted rounded-full h-2.5 overflow-hidden">
                   <div
-                    className="h-full bg-primary rounded-full transition-all duration-200"
-                    style={{ width: `${uploadProgress}%` }}
+                    className="h-full rounded-full transition-all duration-200"
+                    style={{
+                      width: `${uploadProgress}%`,
+                      background: 'linear-gradient(90deg, hsl(213,32%,52%), hsl(193,43%,67%))',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 1.5s linear infinite',
+                    }}
                   />
                 </div>
               )}
               <Button
                 onClick={handleShareFile}
                 disabled={!selectedFile || uploading}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.97] transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-primary/20"
               >
                 <FiUpload className="w-4 h-4 mr-2" />
                 {uploading ? 'Sharing...' : 'Share File'}
@@ -337,21 +385,29 @@ export default function ActiveSessionSection({
 
           <ScrollArea className="flex-1 px-4 md:px-6 py-3">
             {safeItems.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center">
-                <FiWifi className="w-10 h-10 text-muted-foreground/40 mb-3" />
+              <div className="flex flex-col items-center justify-center py-16 text-center" style={{ animation: 'fadeIn 0.5s ease-out both' }}>
+                <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center mb-3">
+                  <FiWifi className="w-7 h-7 text-muted-foreground/40" />
+                </div>
                 <p className="text-sm text-muted-foreground">No items shared yet</p>
                 <p className="text-xs text-muted-foreground/70 mt-1">Share text, code, or files using the panel</p>
               </div>
             ) : (
               <div className="space-y-3">
-                {safeItems.map((item) => {
+                {safeItems.map((item, index) => {
                   const isExpanded = expandedId === item.id
+                  const isCopied = copiedId === item.id
                   return (
-                    <Card key={item.id} className="border border-border/40 bg-card/70 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300">
-                      <CardContent className="p-4">
+                    <Card
+                      key={item.id}
+                      className={`relative overflow-hidden border border-border/40 bg-card/70 backdrop-blur-sm shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group ${isCopied ? 'ring-2 ring-green-500/30' : ''}`}
+                      style={{ animation: `slideInRight 0.4s ease-out ${index * 0.08}s both` }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <CardContent className="p-4 relative">
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex items-center gap-2 flex-wrap mb-2">
-                            <span className={`w-7 h-7 rounded-lg flex items-center justify-center ${typeBadgeColor(item.type)}`}>
+                            <span className={`w-7 h-7 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${typeBadgeColor(item.type)}`}>
                               {typeIcon(item.type)}
                             </span>
                             <span className="text-xs font-medium text-foreground capitalize">{item.type}</span>
@@ -384,7 +440,9 @@ export default function ActiveSessionSection({
                           </div>
                         ) : item.type === 'file' ? (
                           <div className="flex items-center gap-3 bg-foreground/[0.03] rounded-lg p-3 mb-2">
-                            <FiFile className="w-6 h-6 text-muted-foreground flex-shrink-0" />
+                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                              <FiFile className="w-5 h-5 text-muted-foreground" />
+                            </div>
                             <div>
                               <p className="text-sm font-medium text-foreground">{item.fileName ?? 'Unknown file'}</p>
                               {item.fileSize != null && (
@@ -404,16 +462,16 @@ export default function ActiveSessionSection({
                             variant="ghost"
                             size="sm"
                             onClick={() => handleCopy(item)}
-                            className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                            className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground active:scale-[0.93] transition-all duration-300"
                           >
-                            {copiedId === item.id ? (
+                            {isCopied ? (
                               <><FiCheck className="w-3 h-3 mr-1 text-green-600" />Copied</>
                             ) : (
                               <><FiCopy className="w-3 h-3 mr-1" />Copy</>
                             )}
                           </Button>
                           {item.type === 'file' && (
-                            <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground">
+                            <Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground active:scale-[0.93] transition-all duration-300">
                               <FiDownload className="w-3 h-3 mr-1" />Download
                             </Button>
                           )}
@@ -422,7 +480,7 @@ export default function ActiveSessionSection({
                               variant="ghost"
                               size="sm"
                               onClick={() => setExpandedId(isExpanded ? null : item.id)}
-                              className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                              className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground active:scale-[0.93] transition-all duration-300"
                             >
                               <FiMaximize2 className="w-3 h-3 mr-1" />{isExpanded ? 'Less' : 'More'}
                             </Button>
@@ -431,7 +489,7 @@ export default function ActiveSessionSection({
                             variant="ghost"
                             size="sm"
                             onClick={() => onSmartAction(item)}
-                            className="h-7 px-2 text-xs text-primary hover:text-primary hover:bg-primary/10"
+                            className="h-7 px-2 text-xs text-primary hover:text-primary hover:bg-primary/10 active:scale-[0.93] transition-all duration-300"
                           >
                             <FiZap className="w-3 h-3 mr-1" />Smart
                           </Button>

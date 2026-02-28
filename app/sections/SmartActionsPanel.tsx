@@ -103,7 +103,7 @@ export default function SmartActionsPanel({
         className="relative w-full max-w-lg mx-4 mb-4 md:mb-0 bg-card/95 backdrop-blur-[20px] border border-white/[0.18] rounded-2xl shadow-2xl overflow-hidden"
         style={{ animation: 'slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both' }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-white/8 to-transparent pointer-events-none rounded-[inherit]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] to-transparent pointer-events-none rounded-[inherit]" />
         <div className="flex items-center justify-between px-5 py-4 border-b border-border/50 relative">
           <div className="flex items-center gap-2">
             <div

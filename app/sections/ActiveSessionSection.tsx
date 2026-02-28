@@ -3,7 +3,6 @@
 import React, { useState, useRef } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -125,18 +124,14 @@ function ConnectedDevices3D() {
           </div>
         </div>
       </div>
-      <svg width="64" height="16" className="flex-shrink-0">
-        <line x1="0" y1="8" x2="64" y2="8" stroke="hsl(213,32%,52%)" strokeWidth="1.5" strokeDasharray="5,3" style={{ animation: 'connectLine 1s linear infinite' }} />
-        <circle r="2.5" fill="hsl(193,43%,67%)">
-          <animateMotion dur="2s" repeatCount="indefinite" path="M0,8 L64,8" />
-        </circle>
-        <circle r="2.5" fill="hsl(193,43%,67%)">
-          <animateMotion dur="2s" repeatCount="indefinite" path="M0,8 L64,8" begin="0.7s" />
-        </circle>
-        <circle r="2.5" fill="hsl(213,32%,62%)">
-          <animateMotion dur="2s" repeatCount="indefinite" path="M0,8 L64,8" begin="1.3s" />
-        </circle>
-      </svg>
+      <div className="flex items-center gap-0 flex-shrink-0 w-16 h-4 relative">
+        <div className="absolute inset-y-0 left-0 right-0 flex items-center">
+          <div className="w-full border-t-2 border-dashed" style={{ borderColor: 'hsl(213,32%,52%)', animation: 'connectLine 1s linear infinite' }} />
+        </div>
+        <div className="absolute w-2 h-2 rounded-full" style={{ background: 'hsl(193,43%,67%)', top: '50%', transform: 'translateY(-50%)', animation: 'particleDot 2s linear infinite' }} />
+        <div className="absolute w-2 h-2 rounded-full" style={{ background: 'hsl(193,43%,67%)', top: '50%', transform: 'translateY(-50%)', animation: 'particleDot 2s linear infinite 0.7s' }} />
+        <div className="absolute w-2 h-2 rounded-full" style={{ background: 'hsl(213,32%,62%)', top: '50%', transform: 'translateY(-50%)', animation: 'particleDot 2s linear infinite 1.3s' }} />
+      </div>
       <div style={{ animation: 'float3d 5s ease-in-out infinite 0.5s' }}>
         <div className="w-10 h-16 rounded-xl shadow-lg border-2 border-white/20" style={{ background: 'linear-gradient(135deg, hsl(193,43%,67%), hsl(213,32%,52%))' }}>
           <div className="w-5 h-0.5 bg-white/30 rounded-full mx-auto mt-1" />

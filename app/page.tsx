@@ -174,6 +174,12 @@ const KEYFRAMES_CSS = `
   0%, 100% { transform: rotateY(30deg) rotateX(20deg) translateY(0); }
   50% { transform: rotateY(25deg) rotateX(25deg) translateY(-18px); }
 }
+@keyframes particleDot {
+  0% { left: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { left: calc(100% - 8px); opacity: 0; }
+}
 `
 
 class ErrorBoundary extends React.Component<
